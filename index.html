@@ -1,9 +1,35 @@
 <!doctype html><html lang='fi'><head><meta name="robots" content="noindex"><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Jutila – divisioonaraportti</title><style>
-:root{--bg:#fff;--card:rgba(255,255,255,.9);--fg:#1d1d1f;--mut:#6b7280;--line:#e5e7eb;--up:#dcfce7;--down:#fee2e2;--won:#bbf7d0;--wontxt:#14532d}
-@media(prefers-color-scheme:dark){:root{--bg:#111418;--card:rgba(17,20,24,.9);--fg:#e8eaed;--mut:#9aa0a6;--line:#2a2f36;--up:#12351f;--down:#3b1818;--won:#14532d;--wontxt:#bbf7d0}}
+:root{--bg:#fff;--card:rgba(255,255,255,.82);--fg:#1d1d1f;--mut:#6b7280;--line:#e5e7eb;--up:#dcfce7;--down:#fee2e2;--won:#bbf7d0;--wontxt:#14532d}
+@media(prefers-color-scheme:dark){:root{--bg:#111418;--card:rgba(17,20,24,.82);--fg:#e8eaed;--mut:#9aa0a6;--line:#2a2f36;--up:#12351f;--down:#3b1818;--won:#14532d;--wontxt:#bbf7d0}}
 html{background:var(--bg)}
-body{font-family:system-ui,sans-serif;color:var(--fg);margin:0;padding:16px;line-height:1.4}
-main{max-width:1100px;margin:0 auto;padding:16px;background:var(--card);border-radius:12px}
+body{
+    font-family:system-ui,sans-serif;
+    color:var(--fg);
+    margin:0;
+    padding:16px;
+    line-height:1.4;
+
+    background:
+        linear-gradient(
+            rgba(0,0,0,0.65),
+            rgba(0,0,0,0.65)
+        ),
+        url("Background.png");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+}
+main{
+    max-width:1100px;
+    margin:0 auto;
+    padding:16px;
+    background:var(--card);
+    border-radius:12px;
+    backdrop-filter:blur(12px);
+    box-shadow:0 10px 40px rgba(0,0,0,.35);
+}
 h1{margin-bottom:4px}h2{margin:32px 0 4px}h3{margin:16px 0 6px}
 .meta,.note{color:var(--mut);font-size:.9em;margin:2px 0}
 .tag{font-size:.6em;font-weight:600;border:1px solid var(--line);border-radius:10px;padding:2px 8px;vertical-align:middle}
