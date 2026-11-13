@@ -1,0 +1,390 @@
+<!doctype html><html lang="fi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>Jutilan manageriprofiili</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: ottelupöytäkirja – yksi kapea sarake, osiot kuin pöytäkirjan erät, punainen maalivalo korostuksena */
+:root {
+  --bg: #eef2f6;          /* jää */
+  --paper: #ffffff;
+  --ink: #12202f;
+  --muted: #5a6b7c;
+  --line: #d3dce5;
+  --accent: #c8102e;      /* maalivalo */
+  --accent-ink: #ffffff;
+  --focus: #1f6feb;
+  --ok: #17803d;
+  --display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0d151e; --paper: #15212d; --ink: #e6edf4; --muted: #93a4b5; --line: #26384a;
+  --accent: #ff4d5e; --accent-ink: #1a0508; --focus: #6aa8ff; --ok: #4cc47a; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0d151e; --paper: #15212d; --ink: #e6edf4; --muted: #93a4b5; --line: #26384a;
+  --accent: #ff4d5e; --accent-ink: #1a0508; --focus: #6aa8ff; --ok: #4cc47a; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 64px }
+.wrap { max-width: 640px; margin: 0 auto; display: grid; gap: 20px }
+h1, h2 { font-family: var(--display); font-weight: 700; letter-spacing: .01em; margin: 0; text-wrap: balance }
+h1 { font-size: 2.3rem; line-height: 1.05; text-transform: uppercase }
+h2 { font-size: 1.35rem; text-transform: uppercase; display: flex; align-items: baseline; gap: 10px }
+h2 .erä { font-size: .78rem; letter-spacing: .12em; color: var(--accent); font-weight: 700 }
+.lede { color: var(--muted); margin: 6px 0 0; max-width: 60ch }
+.sheet { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 20px; display: grid; gap: 18px }
+.sheet > p.note { margin: -8px 0 0; color: var(--muted); font-size: .9rem }
+.q { display: grid; gap: 6px; min-width: 0 }
+.q label.t, .q legend { font-weight: 600 }
+.q .n { font-family: var(--display); color: var(--muted); font-size: .95rem; margin-right: 6px; font-variant-numeric: tabular-nums }
+.q .h { color: var(--muted); font-size: .86rem; margin: 0 }
+.req { color: var(--accent); font-weight: 700; margin-left: 2px }
+fieldset.q { border: 0; padding: 0; margin: 0 }
+input[type=text], input[type=password], select, textarea {
+  width: 100%; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 4px; padding: 9px 11px }
+textarea { min-height: 76px; resize: vertical }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, .opt input:focus-visible + span {
+  outline: 2px solid var(--focus); outline-offset: 2px }
+.opts { display: flex; flex-wrap: wrap; gap: 8px }
+.opt { position: relative }
+.opt input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer }
+.opt span { display: inline-block; padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); font-size: .92rem }
+.opt input:checked + span { background: var(--ink); color: var(--paper); border-color: var(--ink) }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: .95rem }
+.check input { margin-top: 4px; width: 18px; height: 18px; accent-color: var(--accent) }
+.row2 { display: grid; grid-template-columns: 110px 1fr; gap: 8px }
+.row2.wide { grid-template-columns: minmax(0, 220px) 1fr }
+@media (max-width: 460px) { .row2, .row2.wide { grid-template-columns: 1fr } h1 { font-size: 1.9rem } }
+button { font: 600 1rem var(--body); border: 0; border-radius: 4px; padding: 12px 18px; cursor: pointer }
+.primary { background: var(--accent); color: var(--accent-ink) }
+.primary[disabled] { opacity: .6; cursor: progress }
+.err { color: var(--accent); font-size: .9rem; margin: 0 }
+.invalid { border-color: var(--accent) !important }
+.gate { max-width: 420px; margin: 8vh auto 0 }
+.gate form { display: grid; gap: 12px }
+.stamp { font-family: var(--display); letter-spacing: .14em; text-transform: uppercase; font-size: .8rem; color: var(--accent) }
+.done { border-left: 4px solid var(--ok) }
+pre.out { white-space: pre-wrap; word-break: break-word; background: var(--bg); border: 1px solid var(--line);
+  border-radius: 4px; padding: 12px; font-size: .82rem; max-height: 360px; overflow: auto; margin: 0 }
+.foot { display: flex; flex-wrap: wrap; gap: 12px; align-items: center }
+.foot .h { color: var(--muted); font-size: .86rem }
+@media (prefers-reduced-motion: no-preference) { .sheet { transition: border-color .2s } }
+</style>
+
+<!-- Asetukset: kun Google Apps Script -osoite on asetettu, vastaukset lähetetään sinne. Tyhjänä = esikatselu. -->
+<script>window.KYSELY_ENDPOINT = "https://script.google.com/macros/s/AKfycbzgCg-2QbBrHHXTV8EhAm_UKMY0ydHthfoNXwl0gXwwJz08iyGsgRL41E6bG0X2yesg/exec";</script>
+
+<div class="wrap">
+
+  <section class="sheet gate" id="gate">
+    <div class="stamp">Jutilan kiakkokoulu</div>
+    <h1>Manageriprofiili</h1>
+    <form id="gateForm" autocomplete="off">
+      <label class="t" for="pw">Salasana</label>
+      <input type="password" id="pw" autocomplete="off">
+      <p class="err" id="pwErr" hidden>Väärä salasana. Kysy liigan ylläpitäjältä.</p>
+      <button class="primary" type="submit">Avaa lomake</button>
+    </form>
+  </section>
+
+  <div id="main" hidden>
+    <header>
+      <div class="stamp">Jutilan kiakkokoulu · kausi 2026–27</div>
+      <h1>Manageriprofiili</h1>
+      <p class="lede">Vastauksia käyttää vain Päivän faktan kirjoittava tekoäly. Niitä ei näytetä raportilla eikä muille managereille. Mitä enemmän kerrot, sitä henkilökohtaisemmiksi jutut muuttuvat. Rajat-osiossa päätät, mistä ei puhuta.</p>
+      <p class="h">Pakolliset kohdat on merkitty punaisella tähdellä. Vie noin 10–15 minuuttia.</p>
+    </header>
+
+    <form id="f" novalidate>
+      <div class="wrap">
+
+      <section class="sheet">
+        <h2><span class="erä">A</span>Perustiedot</h2>
+        <div class="q"><label class="t" for="joukkue"><span class="n">1</span>Joukkue, jonka GM olet<span class="req">*</span></label>
+          <select id="joukkue" name="joukkue" required></select></div>
+        <div class="q"><label class="t" for="nimi"><span class="n">2</span>Millä nimellä esiinnyt Päivän faktassa?<span class="req">*</span></label>
+          <p class="h">Lempinimi tai etunimi. Tekoäly käyttää vain tätä nimeä.</p>
+          <input type="text" id="nimi" name="nimi" required maxlength="40"></div>
+        <div class="q"><label class="t" for="lempinimet"><span class="n">3</span>Muut lempinimet, joilla porukka sinut tuntee</label>
+          <input type="text" id="lempinimet" name="lempinimet" maxlength="120"></div>
+        <div class="q"><label class="t" for="syntymavuosi"><span class="n">4</span>Syntymävuosi</label>
+          <select id="syntymavuosi" name="syntymavuosi"></select></div>
+        <div class="q"><label class="t" for="horoskooppi"><span class="n">5</span>Horoskooppimerkki</label>
+          <select id="horoskooppi" name="horoskooppi"></select></div>
+      </section>
+
+      <section class="sheet">
+        <h2><span class="erä">B</span>Kiekkoidentiteetti</h2>
+        <div class="q"><label class="t" for="suosikki"><span class="n">6</span>NHL-suosikkijoukkue</label>
+          <select id="suosikki" name="suosikki" data-nhl="Ei suosikkia"></select></div>
+        <div class="q"><label class="t" for="inhokki"><span class="n">7</span>NHL-inhokkijoukkue</label>
+          <select id="inhokki" name="inhokki" data-nhl="Ei inhokkia"></select></div>
+        <div class="q"><label class="t" for="lempipelaaja"><span class="n">8</span>Lempipelaajasi kaikkien aikojen</label>
+          <input type="text" id="lempipelaaja" name="lempipelaaja" maxlength="80"></div>
+        <div class="q"><label class="t" for="eikoskaan"><span class="n">9</span>Pelaaja, jota et koskaan draftaisi, ja miksi</label>
+          <textarea id="eikoskaan" name="eikoskaan" maxlength="400"></textarea></div>
+        <div class="q"><label class="t" for="muulaji"><span class="n">10</span>Liiga-joukkue tai muu laji, jota seuraat</label>
+          <input type="text" id="muulaji" name="muulaji" maxlength="120"></div>
+        <div class="q"><label class="t" for="pelitausta"><span class="n">11</span>Oma pelitausta</label>
+          <p class="h">Esim. "entinen maalivahti", "kaukalopalloa 90-luvulla", "en ole koskaan seissyt luistimilla".</p>
+          <input type="text" id="pelitausta" name="pelitausta" maxlength="200"></div>
+        <div class="q"><label class="t" for="kaupunki"><span class="n">12</span>Missä kaupungissa asut?</label>
+          <p class="h">Vapaaehtoinen. Riittää paikkakunta.</p>
+          <input type="text" id="kaupunki" name="kaupunki" maxlength="60"></div>
+        <fieldset class="q"><legend><span class="n">13</span>Harrastatko NHL-vedonlyöntiä?</legend>
+          <div class="opts" data-radio="vedonlyonti">
+            <label class="opt"><input type="radio" name="vedonlyonti" value="En"><span>En</span></label>
+            <label class="opt"><input type="radio" name="vedonlyonti" value="Satunnaisesti"><span>Satunnaisesti</span></label>
+            <label class="opt"><input type="radio" name="vedonlyonti" value="Säännöllisesti"><span>Säännöllisesti</span></label>
+            <label class="opt"><input type="radio" name="vedonlyonti" value="Rahoitan Veikkauksen kasvua"><span>Rahoitan Veikkauksen kasvua</span></label>
+          </div></fieldset>
+        <div class="q" id="vetoQ" hidden><label class="t" for="veto"><span class="n">13b</span>Paras tai tuskallisin vetosi?</label>
+          <textarea id="veto" name="veto" maxlength="400"></textarea></div>
+      </section>
+
+      <section class="sheet">
+        <h2><span class="erä">C</span>Manageri fantasyliigassa</h2>
+        <div class="q"><label class="t" for="strategia"><span class="n">14</span>Draft-strategiasi yhdellä lauseella</label>
+          <input type="text" id="strategia" name="strategia" maxlength="200"></div>
+        <div class="q"><label class="t" for="huonoin"><span class="n">15</span>Huonoin päätöksesi Jutilan historiassa</label>
+          <p class="h">Treidi, draft-valinta, penkitys tai mikä tahansa, mikä kaivelee vieläkin.</p>
+          <textarea id="huonoin" name="huonoin" maxlength="500"></textarea></div>
+        <div class="q"><label class="t" for="paras"><span class="n">16</span>Paras onnistumisesi, josta muistutat muita</label>
+          <textarea id="paras" name="paras" maxlength="500"></textarea></div>
+        <fieldset class="q"><legend><span class="n">17</span>Kuinka usein tarkistat kokoonpanosi?</legend>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="kokoonpano" value="Joka aamu"><span>Joka aamu</span></label>
+            <label class="opt"><input type="radio" name="kokoonpano" value="Muutaman kerran viikossa"><span>Muutaman kerran viikossa</span></label>
+            <label class="opt"><input type="radio" name="kokoonpano" value="Kerran viikossa"><span>Kerran viikossa</span></label>
+            <label class="opt"><input type="radio" name="kokoonpano" value="Kun muistan"><span>Kun muistan</span></label>
+          </div></fieldset>
+        <div class="q"><label class="t" for="vihollinen"><span class="n">18</span>Kuka liigassa on vihollisesi tai pahin kilpakumppanisi, ja miksi?</label>
+          <textarea id="vihollinen" name="vihollinen" maxlength="400"></textarea></div>
+        <div class="q"><label class="t" for="uho_sija"><span class="n">19</span>Uho: mille sijalle sijoitut tällä kaudella?</label>
+          <p class="h">Päivän fakta voi palata tähän keväällä.</p>
+          <div class="row2">
+            <select id="uho_sija" name="uho_sija" aria-label="Sija"></select>
+            <input type="text" id="uho" name="uho" maxlength="200" placeholder="Perustelu tai uhokommentti" aria-label="Uhokommentti">
+          </div></div>
+      </section>
+
+      <section class="sheet">
+        <h2><span class="erä">D</span>Liigan perinne</h2>
+        <div class="q"><label class="t" for="muisto"><span class="n">20</span>Paras muistosi Jutilan historiasta</label>
+          <textarea id="muisto" name="muisto" maxlength="500"></textarea></div>
+        <div class="q"><label class="t" for="moka"><span class="n">21</span>Legendaarisin moka, jonka joku muu on tehnyt</label>
+          <textarea id="moka" name="moka" maxlength="500"></textarea></div>
+        <div class="q"><label class="t" for="kestovitsi"><span class="n">22</span>Kestovitsi, joka liittyy sinuun tai joukkueeseesi</label>
+          <textarea id="kestovitsi" name="kestovitsi" maxlength="400"></textarea></div>
+        <div class="q"><label class="t" for="nimitarina"><span class="n">23</span>Mistä joukkueesi nimi tulee?</label>
+          <textarea id="nimitarina" name="nimitarina" maxlength="400"></textarea></div>
+      </section>
+
+      <section class="sheet">
+        <h2><span class="erä">E</span>Rajat</h2>
+        <p class="note">Nämä ovat tekoälylle ehdottomia sääntöjä.</p>
+        <div class="q"><label class="t" for="kielletyt"><span class="n">24</span>Aiheet, joista ei saa vitsailla<span class="req">*</span></label>
+          <p class="h">Kirjoita "ei mitään", jos kaikki käy.</p>
+          <textarea id="kielletyt" name="kielletyt" required maxlength="400"></textarea></div>
+        <fieldset class="q" id="tasoQ"><legend><span class="n">25</span>Roastin taso<span class="req">*</span></legend>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="taso" value="Anna palaa" required><span>Anna palaa</span></label>
+            <label class="opt"><input type="radio" name="taso" value="Kohtuudella"><span>Kohtuudella</span></label>
+            <label class="opt"><input type="radio" name="taso" value="Vain fantasy-päätöksistä"><span>Vain fantasy-päätöksistä</span></label>
+          </div></fieldset>
+      </section>
+
+      <section class="sheet">
+        <h2><span class="erä">F</span>Muut managerit</h2>
+        <p class="note">Täysin vapaaehtoinen. Valitse joukkue, jonka manageria tarkoitat. Vastauksesi näkee vain tekoäly, eikä niitä yhdistetä sinuun jutuissa. Tekoäly noudattaa aina kohteen omia rajoja.</p>
+        <div class="q"><label class="t" for="m_suunsoittaja"><span class="n">26</span>Kuka manageri on liigan suurin suunsoittaja suhteessa saavutuksiinsa?</label>
+          <div class="row2 wide">
+            <select id="m_suunsoittaja" name="m_suunsoittaja" data-teams aria-label="Joukkue"></select>
+            <input type="text" id="m_suunsoittaja_miksi" name="m_suunsoittaja_miksi" maxlength="300" placeholder="Miksi? (vapaaehtoinen)" aria-label="Perustelu">
+          </div></div>
+        <div class="q"><label class="t" for="m_mestaruuspuheet"><span class="n">27</span>Kenellä on suurimmat mestaruuspuheet ja pienimmät näytöt?</label>
+          <div class="row2 wide">
+            <select id="m_mestaruuspuheet" name="m_mestaruuspuheet" data-teams aria-label="Joukkue"></select>
+            <input type="text" id="m_mestaruuspuheet_miksi" name="m_mestaruuspuheet_miksi" maxlength="300" placeholder="Miksi? (vapaaehtoinen)" aria-label="Perustelu">
+          </div></div>
+        <div class="q"><label class="t" for="m_eikauppaa"><span class="n">28</span>Kenen kanssa et tekisi pelaajakauppaa edes vahingossa?</label>
+          <div class="row2 wide">
+            <select id="m_eikauppaa" name="m_eikauppaa" data-teams aria-label="Joukkue"></select>
+            <input type="text" id="m_eikauppaa_miksi" name="m_eikauppaa_miksi" maxlength="300" placeholder="Miksi? (vapaaehtoinen)" aria-label="Perustelu">
+          </div></div>
+        <div class="q"><label class="t" for="m_lomalle"><span class="n">29</span>Kuka ottaa fantasyn niin vakavasti, että tarvitsisi välillä lomaa?</label>
+          <div class="row2 wide">
+            <select id="m_lomalle" name="m_lomalle" data-teams aria-label="Joukkue"></select>
+            <input type="text" id="m_lomalle_miksi" name="m_lomalle_miksi" maxlength="300" placeholder="Miksi? (vapaaehtoinen)" aria-label="Perustelu">
+          </div></div>
+        <div class="q"><label class="t" for="m_kultainen_selitys"><span class="n">30</span>Kuka ansaitsisi liigan oman Kultainen Selitys -palkinnon?</label>
+          <div class="row2 wide">
+            <select id="m_kultainen_selitys" name="m_kultainen_selitys" data-teams aria-label="Joukkue"></select>
+            <input type="text" id="m_kultainen_selitys_miksi" name="m_kultainen_selitys_miksi" maxlength="300" placeholder="Miksi? (vapaaehtoinen)" aria-label="Perustelu">
+          </div></div>
+      </section>
+
+      <section class="sheet">
+        <p class="err" id="formErr" hidden></p>
+        <div class="foot">
+          <button class="primary" type="submit" id="send">Lähetä profiili</button>
+          <span class="h">Voit lähettää uudelleen myöhemmin. Uusin vastaus korvaa vanhan.</span>
+        </div>
+      </section>
+
+      </div>
+    </form>
+
+    <section class="sheet done" id="thanks" hidden>
+      <div class="stamp" id="thanksStamp">Lähetetty</div>
+      <h2 id="thanksTitle">Kiitos, profiili on tallessa</h2>
+      <p class="h" id="thanksText">Päivän fakta käyttää tietoja tulevissa jutuissa rajojesi mukaan.</p>
+      <pre class="out" id="out" hidden></pre>
+      <div class="foot"><button type="button" id="again">Muokkaa vastauksia</button></div>
+    </section>
+  </div>
+</div>
+
+<script>
+(function () {
+  var PASSWORD = "gm";
+  var TEAMS = ["Brooox", "D.R.I", "Don Pollos Hermanos", "Espoo Chiefs", "GM X", "Hellsinki Little Bulldogs",
+    "Jagr 68", "Kulomäen Ketterä", "Las Pargas Islanders", "Lopen LoKit", "Lungu Lungu", "Pasilan Kalteva",
+    "Seattle IRMagnets", "Southern Hooligans", "Team T", "Tehtaansuo Akatemia", "Tusby sHooters", "Veromies Breezers"];
+  var NHL = ["Anaheim Ducks", "Boston Bruins", "Buffalo Sabres", "Calgary Flames", "Carolina Hurricanes",
+    "Chicago Blackhawks", "Colorado Avalanche", "Columbus Blue Jackets", "Dallas Stars", "Detroit Red Wings",
+    "Edmonton Oilers", "Florida Panthers", "Los Angeles Kings", "Minnesota Wild", "Montreal Canadiens",
+    "Nashville Predators", "New Jersey Devils", "New York Islanders", "New York Rangers", "Ottawa Senators",
+    "Philadelphia Flyers", "Pittsburgh Penguins", "San Jose Sharks", "Seattle Kraken", "St. Louis Blues",
+    "Tampa Bay Lightning", "Toronto Maple Leafs", "Utah Mammoth", "Vancouver Canucks", "Vegas Golden Knights",
+    "Washington Capitals", "Winnipeg Jets"];
+  var DRAFT_KEY = "jutila-profiili-luonnos";
+  var $ = function (id) { return document.getElementById(id); };
+
+  function fill(sel, first, items) {
+    var o = document.createElement("option"); o.value = ""; o.textContent = first; sel.appendChild(o);
+    items.forEach(function (t) { var x = document.createElement("option"); x.value = t; x.textContent = t; sel.appendChild(x); });
+  }
+  fill($("joukkue"), "Valitse joukkue", TEAMS);
+  ["suosikki", "inhokki"].forEach(function (id) {
+    var sel = $(id), label = sel.getAttribute("data-nhl");
+    fill(sel, "Valitse", []);
+    var o = document.createElement("option"); o.value = label; o.textContent = label; sel.appendChild(o);
+    NHL.forEach(function (t) { var x = document.createElement("option"); x.value = t; x.textContent = t; sel.appendChild(x); });
+  });
+  document.querySelectorAll("select[data-teams]").forEach(function (sel) { fill(sel, "Valitse joukkue", TEAMS); });
+  var years = []; for (var y = 2008; y >= 1940; y--) years.push(String(y));
+  fill($("syntymavuosi"), "Valitse vuosi", years);
+  fill($("horoskooppi"), "Valitse merkki", ["Oinas", "Härkä", "Kaksoset", "Rapu", "Leijona", "Neitsyt", "Vaaka",
+    "Skorpioni", "Jousimies", "Kauris", "Vesimies", "Kalat", "En tiedä"]);
+  fill($("uho_sija"), "Sija", Array.from({ length: 18 }, function (_, i) { return String(i + 1) + "."; }));
+
+  // salasana (kevyt portti: estää satunnaiset vierailijat)
+  function unlock() { $("gate").hidden = true; $("main").hidden = false; }
+  try { if (sessionStorage.getItem("jutila-profiili-auki") === "1") unlock(); } catch (e) {}
+  $("gateForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if ($("pw").value.trim().toLowerCase() === PASSWORD) {
+      try { sessionStorage.setItem("jutila-profiili-auki", "1"); } catch (err) {}
+      unlock();
+    } else { $("pwErr").hidden = false; $("pw").select(); }
+  });
+
+  var form = $("f");
+  function syncVeto() {
+    var v = (form.querySelector("input[name=vedonlyonti]:checked") || {}).value;
+    $("vetoQ").hidden = !v || v === "En";
+  }
+  form.addEventListener("change", syncVeto);
+
+  function collect() {
+    var data = {};
+    Array.prototype.forEach.call(form.elements, function (el) {
+      if (!el.name) return;
+      if ((el.type === "radio" || el.type === "checkbox") && !el.checked) return;
+      var v = (el.value || "").trim();
+      if (v) data[el.name] = v;
+    });
+    if (data.vedonlyonti === "En") delete data.veto;
+    Object.keys(data).forEach(function (k) {  // perustelu ilman valittua joukkuetta ei kerro kenestä on kyse
+      var m = k.match(/^(m_.+)_miksi$/); if (m && !data[m[1]]) delete data[k];
+    });
+    return data;
+  }
+  function restore(data) {
+    Object.keys(data || {}).forEach(function (k) {
+      var els = form.querySelectorAll("[name='" + k + "']");
+      Array.prototype.forEach.call(els, function (el) {
+        if (el.type === "radio" || el.type === "checkbox") el.checked = el.value === data[k];
+        else el.value = data[k];
+      });
+    });
+    syncVeto();
+  }
+  try { restore(JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}")); } catch (e) {}
+  var t;
+  form.addEventListener("input", function () {
+    clearTimeout(t);
+    t = setTimeout(function () { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(collect())); } catch (e) {} }, 400);
+  });
+
+  function validate() {
+    var missing = [];
+    form.querySelectorAll(".invalid").forEach(function (el) { el.classList.remove("invalid"); });
+    [["joukkue", "joukkue"], ["nimi", "nimi Päivän faktaan"], ["kielletyt", "kielletyt aiheet"]].forEach(function (p) {
+      if (!$(p[0]).value.trim()) { $(p[0]).classList.add("invalid"); missing.push(p[1]); }
+    });
+    [["taso", "tasoQ", "roastin taso"]].forEach(function (p) {
+      if (!form.querySelector("input[name=" + p[0] + "]:checked")) {
+        $(p[1]).querySelectorAll(".opt span").forEach(function (s) { s.classList.add("invalid"); });
+        missing.push(p[2]);
+      }
+    });
+    return missing;
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var missing = validate();
+    if (missing.length) {
+      $("formErr").textContent = "Täytä vielä: " + missing.join(", ") + ".";
+      $("formErr").hidden = false;
+      var first = form.querySelector(".invalid"); if (first) first.scrollIntoView({ block: "center" });
+      return;
+    }
+    $("formErr").hidden = true;
+    var payload = { lahetetty: new Date().toISOString(), salasana: PASSWORD, vastaukset: collect() };
+    var endpoint = window.KYSELY_ENDPOINT;
+    if (!endpoint) { return done(payload, true); }
+    $("send").disabled = true; $("send").textContent = "Lähetetään…";
+    // text/plain välttää CORS-esikyselyn; Apps Script lukee rungon e.postData.contents:sta
+    fetch(endpoint, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload) })
+      .then(function () { done(payload, false); })
+      .catch(function () {
+        $("formErr").textContent = "Lähetys epäonnistui. Tarkista verkkoyhteys ja yritä uudelleen; vastauksesi ovat tallessa tällä laitteella.";
+        $("formErr").hidden = false;
+      })
+      .finally(function () { $("send").disabled = false; $("send").textContent = "Lähetä profiili"; });
+  });
+
+  function done(payload, preview) {
+    form.hidden = true; $("thanks").hidden = false;
+    if (preview) {
+      $("thanksStamp").textContent = "Esikatselu";
+      $("thanksTitle").textContent = "Vastauksia ei lähetetty";
+      $("thanksText").textContent = "Lomake on esikatselutilassa, koska tallennusosoitetta ei ole vielä asetettu. Alla on tieto, joka lähetettäisiin.";
+      var shown = Object.assign({}, payload); delete shown.salasana;
+      $("out").textContent = JSON.stringify(shown, null, 2); $("out").hidden = false;
+    }
+    $("thanks").scrollIntoView({ block: "start" });
+  }
+  $("again").addEventListener("click", function () { $("thanks").hidden = true; form.hidden = false; });
+})();
+</script>
+
+</body></html>
